@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  vizzz-db:
+    build: ./docker-mysql/mysql
+    image: mysql:5.7
+    container_name: vizzz-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: dev
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password_
+    networks:
+      - viz-net
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker-mysql/mysql/initdb.d:/docker-entrypoint-initdb.d
+      - ./docker-mysql/mysql/conf.d:/etc/mysql/conf.d
+      - ./docker-mysql/mysql:/var/log/mysql
+
+networks:
+  viz-net:
+    driver: bridge
+

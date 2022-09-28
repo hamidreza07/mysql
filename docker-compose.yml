@@ -1,0 +1,37 @@
+version: '2.1'
+services:
+
+
+  vizzz-db:
+    build: ./app-logic-db
+    image: mysql:5.7
+    container_name: vizzz-db
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uuser", "-ppassword_"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    environment:
+      MYSQL_DATABASE: dev
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password_
+
+    ports:
+      - 3306:3306
+    volumes:
+      - ./app-logic-db/initdb.d:/docker-entrypoint-initdb.d
+      - ./app-logic-db/conf.d:/etc/mysql/conf.d
+      - ./app-logic-db/log:/var/log/mysql
+      - ./app-logic-db/dataease/data/mysql:/var/lib/mysql
+
+    networks:
+      - dataease-network
+
+
+networks:
+  dataease-network:
+    driver: bridge
+
+
